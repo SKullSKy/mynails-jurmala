@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 import config from '../data/config.json'
 
 function ServiceRow({ item, index }) {
@@ -42,26 +43,25 @@ function ServiceRow({ item, index }) {
 }
 
 export default function Services() {
+  const isMobile = useIsMobile()
   const mid = Math.ceil(config.services.length / 2)
   const col1 = config.services.slice(0, mid)
   const col2 = config.services.slice(mid)
 
   return (
-    <section id="services" style={{ padding: '7rem 3rem', background: config.palette.sectionBg, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
+    <section id="services" style={{ padding: isMobile ? '4rem 1.5rem' : '7rem 3rem', background: config.palette.sectionBg, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '5rem', alignItems: 'end' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '1.5rem' : '4rem', marginBottom: isMobile ? '2.5rem' : '5rem', alignItems: 'end' }}>
           <div>
             <div style={{
               fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
               letterSpacing: '0.3em', textTransform: 'uppercase',
               color: 'rgba(26,24,23,0.38)', marginBottom: '1.25rem',
-            }}>
-              Services & Pricing
-            </div>
+            }}>Services & Pricing</div>
             <h2 style={{
               fontFamily: 'Inter, sans-serif',
-              fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
+              fontSize: isMobile ? 'clamp(2rem, 9vw, 2.8rem)' : 'clamp(2.2rem, 4vw, 3.5rem)',
               fontWeight: 800, color: '#1A1817', lineHeight: 1.0,
               letterSpacing: '-0.03em',
             }}>
@@ -69,14 +69,14 @@ export default function Services() {
               <span style={{ borderBottom: `3px solid ${config.brand.accentColor}`, paddingBottom: '2px' }}>resolved.</span>
             </h2>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,24,23,0.6)', paddingBottom: '0.5rem' }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,24,23,0.6)', paddingBottom: isMobile ? 0 : '0.5rem' }}>
             All works use professional-grade materials. Pricing provided after initial assessment.
             Available for emergency callouts and scheduled appointments across Latvia.
           </p>
         </div>
 
-        {/* Service columns */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem 5rem' }}>
+        {/* Service columns — single column on mobile */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 0 : '3rem 5rem' }}>
           <div>
             {col1.map((item, i) => <ServiceRow key={item.id} item={item} index={i} />)}
           </div>
@@ -85,23 +85,20 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Book CTA */}
-        <div style={{ marginTop: '4rem', textAlign: 'center' }}>
-          <a href="#book"
-            style={{
-              display: 'inline-block',
-              fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 500,
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              color: '#fff', background: '#1A1817',
-              border: '1px solid #1A1817',
-              padding: '0.9rem 2.5rem', textDecoration: 'none',
-              transition: 'all 0.3s ease',
-            }}
+        <div style={{ marginTop: isMobile ? '2.5rem' : '4rem', textAlign: 'center' }}>
+          <a href="#book" style={{
+            display: 'inline-block',
+            fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 500,
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+            color: '#fff', background: '#1A1817',
+            border: '1px solid #1A1817',
+            padding: isMobile ? '0.9rem 2rem' : '0.9rem 2.5rem', textDecoration: 'none',
+            transition: 'all 0.3s ease',
+            width: isMobile ? '100%' : 'auto', textAlign: 'center', boxSizing: 'border-box',
+          }}
             onMouseEnter={e => { e.currentTarget.style.background = config.brand.accentColor; e.currentTarget.style.borderColor = config.brand.accentColor }}
             onMouseLeave={e => { e.currentTarget.style.background = '#1A1817'; e.currentTarget.style.borderColor = '#1A1817' }}
-          >
-            Request a Quote
-          </a>
+          >Request a Quote</a>
         </div>
       </div>
     </section>

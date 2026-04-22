@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 import config from '../data/config.json'
 
 const ACCENT = config.brand.accentColor
@@ -8,9 +9,9 @@ const photos = Array.from(
   new Map((config.gallery ?? []).map(p => [p.src, p])).values()
 )
 
-const CARDS_VISIBLE = 3
-
 export default function Gallery() {
+  const isMobile = useIsMobile()
+  const CARDS_VISIBLE = isMobile ? 1 : 3
   const [offset, setOffset] = useState(0)
 
   if (photos.length === 0) return null
@@ -22,11 +23,11 @@ export default function Gallery() {
   const next = () => setOffset(o => Math.min(maxOffset, o + 1))
 
   return (
-    <section id="gallery" style={{ padding: '8rem 0', background: SECTION_BG, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 3rem' }}>
+    <section id="gallery" style={{ padding: isMobile ? '4rem 0' : '8rem 0', background: SECTION_BG, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 1.5rem' : '0 3rem' }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '2rem' : '3.5rem' }}>
           <div style={{
             fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
             letterSpacing: '0.3em', textTransform: 'uppercase',
@@ -34,7 +35,7 @@ export default function Gallery() {
           }}>Gallery</div>
           <h2 style={{
             fontFamily: 'Inter, sans-serif',
-            fontSize: 'clamp(2rem, 3.5vw, 3rem)',
+            fontSize: isMobile ? 'clamp(1.8rem, 8vw, 2.5rem)' : 'clamp(2rem, 3.5vw, 3rem)',
             fontWeight: 800, color: '#1A1817', lineHeight: 1.05,
             letterSpacing: '-0.03em', marginBottom: '1rem',
           }}>
@@ -50,11 +51,10 @@ export default function Gallery() {
         </div>
 
         {/* Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(photos.length, CARDS_VISIBLE)}, 1fr)`, gap: '1.5rem' }}>
-          {visible.map((photo, i) => (
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(photos.length, CARDS_VISIBLE)}, 1fr)`, gap: isMobile ? '1rem' : '1.5rem' }}>
+          {visible.map((photo) => (
             <div key={photo.src} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Image with overlay label */}
-              <div style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', aspectRatio: isMobile ? '4/3' : '4/5', overflow: 'hidden' }}>
                 <img
                   src={photo.src}
                   alt={photo.alt}
@@ -66,38 +66,25 @@ export default function Gallery() {
                     display: 'block',
                     transition: 'transform 0.6s ease',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                  onMouseEnter={e => { if (!isMobile) e.currentTarget.style.transform = 'scale(1.03)' }}
                   onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 />
-                {/* Top-left label overlay */}
                 {photo.label && (
                   <div style={{
                     position: 'absolute', top: '1rem', left: '1rem',
                     background: 'rgba(26,24,23,0.62)',
-                    backdropFilter: 'blur(4px)',
                     padding: '0.35rem 0.75rem',
                     fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 500,
-                    letterSpacing: '0.12em', textTransform: 'uppercase',
-                    color: '#fff',
-                  }}>
-                    {photo.label}
-                  </div>
+                    letterSpacing: '0.12em', textTransform: 'uppercase', color: '#fff',
+                  }}>{photo.label}</div>
                 )}
               </div>
-
-              {/* Caption below card */}
               <div>
-                <div style={{
-                  fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', fontWeight: 600,
-                  color: '#1A1817', marginBottom: '0.2rem',
-                }}>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', fontWeight: 600, color: '#1A1817', marginBottom: '0.2rem' }}>
                   {photo.alt}
                 </div>
                 {photo.subtitle && (
-                  <div style={{
-                    fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: 300,
-                    color: 'rgba(26,24,23,0.45)', fontStyle: 'italic',
-                  }}>
+                  <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: 300, color: 'rgba(26,24,23,0.45)', fontStyle: 'italic' }}>
                     {photo.subtitle}
                   </div>
                 )}
@@ -106,29 +93,21 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* Navigation arrows — only when there are more photos than cards visible */}
+        {/* Navigation */}
         {photos.length > CARDS_VISIBLE && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '3rem' }}>
-            <span style={{
-              fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300,
-              color: 'rgba(26,24,23,0.35)', letterSpacing: '0.1em',
-            }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: isMobile ? '1.5rem' : '3rem' }}>
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300, color: 'rgba(26,24,23,0.35)', letterSpacing: '0.1em' }}>
               {offset + 1} – {Math.min(offset + CARDS_VISIBLE, photos.length)} / {photos.length}
             </span>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {[[-1, '←'], [1, '→']].map(([dir, label]) => (
-                <button
-                  key={dir}
-                  onClick={dir === -1 ? prev : next}
+                <button key={dir} onClick={dir === -1 ? prev : next}
                   disabled={(dir === -1 && offset === 0) || (dir === 1 && offset >= maxOffset)}
                   style={{
-                    width: 44, height: 44,
-                    background: 'transparent',
-                    border: '1px solid rgba(26,24,23,0.2)',
-                    cursor: 'pointer',
-                    fontFamily: 'Inter, sans-serif', fontSize: '1rem',
-                    color: '#1A1817',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: isMobile ? 48 : 44, height: isMobile ? 48 : 44,
+                    background: 'transparent', border: '1px solid rgba(26,24,23,0.2)',
+                    cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: '1rem',
+                    color: '#1A1817', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'all 0.25s ease',
                     opacity: ((dir === -1 && offset === 0) || (dir === 1 && offset >= maxOffset)) ? 0.25 : 1,
                   }}
@@ -139,7 +118,6 @@ export default function Gallery() {
             </div>
           </div>
         )}
-
       </div>
     </section>
   )

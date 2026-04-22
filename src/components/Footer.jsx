@@ -1,3 +1,4 @@
+import { useIsMobile } from '../hooks/useIsMobile'
 import config from '../data/config.json'
 
 const InstagramIcon = () => (
@@ -15,6 +16,7 @@ const FacebookIcon = () => (
 )
 
 export default function Footer() {
+  const isMobile = useIsMobile()
   const year = new Date().getFullYear()
   const addressLines = config.contact.address.split(', ')
 
@@ -24,7 +26,7 @@ export default function Footer() {
       {/* Large wordmark */}
       <div style={{
         textAlign: 'center',
-        padding: '5rem 3rem 4rem',
+        padding: isMobile ? '3rem 1.5rem 2.5rem' : '5rem 3rem 4rem',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
         overflow: 'hidden',
       }}>
@@ -41,32 +43,28 @@ export default function Footer() {
           letterSpacing: '0.35em', textTransform: 'uppercase',
           color: 'rgba(255,255,255,0.35)', marginTop: '1.25rem',
         }}>
-          Plumbing Services · {config.brand.location}
+          {config.brand.location}
         </div>
       </div>
 
-      {/* Three-column links */}
+      {/* Columns */}
       <div style={{
         maxWidth: 1100, margin: '0 auto',
-        display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
-        gap: '3rem', padding: '3.5rem 3rem',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr',
+        gap: isMobile ? '2rem' : '3rem',
+        padding: isMobile ? '2.5rem 1.5rem' : '3.5rem 3rem',
         borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}>
-        {/* Col 1 — Tagline */}
         <div>
-          <p style={{
-            fontFamily: 'Inter, sans-serif', fontSize: '1.1rem',
-            fontStyle: 'italic', fontWeight: 300,
-            color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 240,
-          }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1.1rem', fontStyle: 'italic', fontWeight: 300, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 240 }}>
             "{config.brand.tagline}"
           </p>
         </div>
 
-        {/* Col 2 — Navigation */}
         <div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 400, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '1.25rem' }}>Navigate</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', flexWrap: 'wrap', gap: isMobile ? '0.5rem 1.5rem' : '0.65rem' }}>
             {['Services', 'Gallery', 'About', 'Book'].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} style={{
                 fontFamily: 'Inter, sans-serif', fontSize: '0.92rem', fontWeight: 300,
@@ -80,7 +78,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Col 3 — Contact */}
         <div>
           <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 400, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', marginBottom: '1.25rem' }}>Find Us</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
@@ -111,7 +108,8 @@ export default function Footer() {
       <div style={{
         maxWidth: 1100, margin: '0 auto',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '1.25rem 3rem', flexWrap: 'wrap', gap: '0.5rem',
+        padding: isMobile ? '1.25rem 1.5rem' : '1.25rem 3rem',
+        flexWrap: 'wrap', gap: '0.5rem',
       }}>
         <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 300, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>
           © {year} {config.brand.name}

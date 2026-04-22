@@ -1,28 +1,24 @@
 import { useState } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 import config from '../data/config.json'
 
 const ACCENT = config.brand.accentColor
 const SECTION_BG = config.palette.sectionBg
 
 const INPUT = {
-  width: '100%',
-  background: 'transparent',
-  border: 'none',
-  borderBottom: '1px solid rgba(26,24,23,0.18)',
-  padding: '0.75rem 0',
+  width: '100%', background: 'transparent', border: 'none',
+  borderBottom: '1px solid rgba(26,24,23,0.18)', padding: '0.75rem 0',
   fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300,
-  color: '#1A1817', outline: 'none', borderRadius: 0,
-  transition: 'border-color 0.3s ease',
+  color: '#1A1817', outline: 'none', borderRadius: 0, transition: 'border-color 0.3s ease',
 }
 
 const LABEL = {
-  display: 'block',
-  fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
-  letterSpacing: '0.2em', textTransform: 'uppercase',
-  color: 'rgba(26,24,23,0.38)', marginBottom: '0.35rem',
+  display: 'block', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
+  letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(26,24,23,0.38)', marginBottom: '0.35rem',
 }
 
 export default function Contact() {
+  const isMobile = useIsMobile()
   const [form, setForm] = useState({ name: '', business: '', message: '' })
   const [sent, setSent] = useState(false)
 
@@ -31,12 +27,8 @@ export default function Contact() {
   const submit = e => {
     e.preventDefault()
     if (!form.name || !form.message) return
-    // Build a mailto link with the form content
     const subject = encodeURIComponent(`Quote Request — ${form.business || form.name}`)
     const body = encodeURIComponent(`Name: ${form.name}\nBusiness: ${form.business}\n\n${form.message}`)
-    const email = config.contact.email || config.contact.whatsapp
-      ? null
-      : null
     if (config.contact.email) {
       window.location.href = `mailto:${config.contact.email}?subject=${subject}&body=${body}`
     }
@@ -48,21 +40,19 @@ export default function Contact() {
     : null
 
   return (
-    <section id="book" style={{ padding: '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7rem', alignItems: 'start' }}>
+    <section id="book" style={{ padding: isMobile ? '4rem 1.5rem' : '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '2.5rem' : '7rem', alignItems: 'start' }}>
 
         {/* Left — info */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
             <div style={{ width: 28, height: 1, background: ACCENT }} />
-            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: ACCENT }}>
-              Get in Touch
-            </span>
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: ACCENT }}>Get in Touch</span>
           </div>
 
           <h2 style={{
             fontFamily: 'Inter, sans-serif',
-            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontSize: isMobile ? 'clamp(2rem, 9vw, 2.8rem)' : 'clamp(2rem, 4vw, 3rem)',
             fontWeight: 800, color: '#1A1817', lineHeight: 1.05,
             letterSpacing: '-0.03em', marginBottom: '1.5rem',
           }}>
@@ -70,7 +60,7 @@ export default function Contact() {
             <span style={{ borderBottom: `2px solid ${ACCENT}`, paddingBottom: '3px' }}>a quote.</span>
           </h2>
 
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,24,23,0.6)', marginBottom: '3rem', maxWidth: 360 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,24,23,0.6)', marginBottom: '2rem', maxWidth: 360 }}>
             Tell us about your project — the space, the size, your brand colours. We'll come back with a precise proposal.
           </p>
 
@@ -84,14 +74,12 @@ export default function Contact() {
                 >{config.contact.phone}</span>
               </a>
             )}
-
             {config.contact.address && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
                 <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(26,24,23,0.35)' }}>Location</span>
                 <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, color: '#1A1817' }}>{config.contact.address}</span>
               </div>
             )}
-
             {whatsappHref && (
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer" style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
@@ -99,8 +87,9 @@ export default function Contact() {
                 letterSpacing: '0.12em', textTransform: 'uppercase',
                 color: '#fff', background: '#25D366',
                 padding: '0.85rem 1.75rem', textDecoration: 'none',
-                transition: 'opacity 0.3s ease', marginTop: '0.5rem',
-                alignSelf: 'flex-start',
+                transition: 'opacity 0.3s ease', marginTop: '0.5rem', alignSelf: 'flex-start',
+                width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'center' : 'flex-start',
+                boxSizing: 'border-box',
               }}
                 onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
                 onMouseLeave={e => e.currentTarget.style.opacity = '1'}
@@ -117,7 +106,7 @@ export default function Contact() {
         {/* Right — form */}
         <div>
           {sent ? (
-            <div style={{ padding: '3rem', border: `1px solid rgba(26,24,23,0.08)`, textAlign: 'center' }}>
+            <div style={{ padding: '3rem', border: '1px solid rgba(26,24,23,0.08)', textAlign: 'center' }}>
               <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.2em', textTransform: 'uppercase', color: ACCENT, marginBottom: '1rem' }}>
                 Message received
               </div>
@@ -134,7 +123,6 @@ export default function Contact() {
                   onBlur={e => e.target.style.borderColor = 'rgba(26,24,23,0.18)'}
                 />
               </div>
-
               <div>
                 <label style={LABEL}>Business / Brand</label>
                 <input name="business" value={form.business} onChange={handle} placeholder="Your studio or company name" style={INPUT}
@@ -142,34 +130,29 @@ export default function Contact() {
                   onBlur={e => e.target.style.borderColor = 'rgba(26,24,23,0.18)'}
                 />
               </div>
-
               <div>
                 <label style={LABEL}>Project Details *</label>
                 <textarea name="message" required value={form.message} onChange={handle}
                   placeholder="Describe your space, the size you have in mind, and your brand colours."
-                  rows={5}
-                  style={{ ...INPUT, resize: 'vertical', lineHeight: 1.7 }}
+                  rows={5} style={{ ...INPUT, resize: 'vertical', lineHeight: 1.7 }}
                   onFocus={e => e.target.style.borderColor = ACCENT}
                   onBlur={e => e.target.style.borderColor = 'rgba(26,24,23,0.18)'}
                 />
               </div>
-
               <button type="submit" style={{
                 fontFamily: 'Inter, sans-serif', fontSize: '0.78rem', fontWeight: 500,
                 letterSpacing: '0.14em', textTransform: 'uppercase',
                 color: '#fff', background: '#1A1817', border: 'none',
                 padding: '1.1rem 2.5rem', cursor: 'pointer',
-                transition: 'background 0.3s ease', alignSelf: 'flex-start',
+                transition: 'background 0.3s ease',
+                width: isMobile ? '100%' : 'auto', alignSelf: isMobile ? 'stretch' : 'flex-start',
               }}
                 onMouseEnter={e => e.currentTarget.style.background = ACCENT}
                 onMouseLeave={e => e.currentTarget.style.background = '#1A1817'}
-              >
-                Send Request
-              </button>
+              >Send Request</button>
             </form>
           )}
         </div>
-
       </div>
     </section>
   )

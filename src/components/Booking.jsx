@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import DOMPurify from 'dompurify'
 import { z } from 'zod'
+import { useIsMobile } from '../hooks/useIsMobile'
 import config from '../data/config.json'
 
 const ACCENT = config.brand.accentColor
@@ -173,6 +174,7 @@ function SuccessModal({ booking, onClose }) {
 }
 
 export default function Booking() {
+  const isMobile = useIsMobile()
   const days = getDays()
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', date: '', time: '' })
   const [errors, setErrors] = useState({})
@@ -273,8 +275,8 @@ export default function Booking() {
     <>
       {success && <SuccessModal booking={form} onClose={() => { setSuccess(false); setStep(1); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '' }) }} />}
 
-      <section id="book" style={{ padding: '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,26,26,0.07)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '5rem', alignItems: 'start' }}>
+      <section id="book" style={{ padding: isMobile ? '4rem 1.5rem' : '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,26,26,0.07)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.6fr', gap: isMobile ? '2.5rem' : '5rem', alignItems: 'start' }}>
 
           {/* Left — copy */}
           <div>
@@ -353,7 +355,7 @@ export default function Booking() {
                     {/* Service selector */}
                     <div style={{ marginBottom: '1.75rem' }}>
                       <div style={{ ...LABEL, marginBottom: '0.75rem' }}>Select Service</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '0.5rem' }}>
                         {services.map(s => (
                           <button
                             key={s.id}
@@ -484,7 +486,7 @@ export default function Booking() {
                     )}
 
                     <form onSubmit={submit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.1rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.1rem' }}>
                         <div>
                           <label style={LABEL}>Full Name *</label>
                           <input name="name" required value={form.name} onChange={handle} placeholder="Anete Bērziņa" style={INPUT} onFocus={onFocus} onBlur={onBlur} />
