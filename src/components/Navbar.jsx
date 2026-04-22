@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import config from '../data/config.json'
 
 const InstagramIcon = () => (
@@ -20,11 +19,9 @@ export default function Navbar() {
   const city = config.brand.location.split(' · ')[0]
 
   return (
-    <motion.nav
-      initial={{ y: -16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+    <nav
       style={{
+        animation: 'fadeUp 0.6s ease-out forwards',
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
         height: 68,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -109,6 +106,6 @@ export default function Navbar() {
       </ul>
 
       <style>{`@media(max-width:768px){nav ul{display:none!important}}`}</style>
-    </motion.nav>
+    </nav>
   )
 }

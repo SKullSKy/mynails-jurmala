@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import GrainOverlay from './components/GrainOverlay'
 import './index.css'
 
 const Services = lazy(() => import('./components/Services'))
@@ -13,7 +12,6 @@ const Footer   = lazy(() => import('./components/Footer'))
 export default function App() {
   return (
     <div style={{ background: '#F2F0EB', minHeight: '100vh' }}>
-      <GrainOverlay />
       <Navbar />
       <Hero />
       <Suspense fallback={null}>

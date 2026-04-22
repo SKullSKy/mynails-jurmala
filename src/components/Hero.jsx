@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion'
 import config from '../data/config.json'
 
-const fade = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, delay, ease: 'easeOut' },
+const fadeUp = (delay = 0) => ({
+  style: {
+    opacity: 0,
+    animation: `fadeUp 0.8s ease-out ${delay}s forwards`,
+  },
 })
 
 export default function Hero() {
@@ -45,7 +45,8 @@ export default function Hero() {
           whiteSpace: 'nowrap',
         }}>01</div>
 
-        <motion.div {...fade(0.1)} style={{
+        <div {...fadeUp(0.1)} style={{
+          ...fadeUp(0.1).style,
           display: 'flex', alignItems: 'center', gap: 12,
           marginBottom: '2.5rem',
           position: 'relative', zIndex: 1,
@@ -57,10 +58,11 @@ export default function Hero() {
           }}>
             {config.brand.location}
           </span>
-        </motion.div>
+        </div>
 
-        <motion.h1 {...fade(0.2)} style={{
-          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+        <h1 style={{
+          ...fadeUp(0.2).style,
+          fontFamily: "'Inter', sans-serif",
           fontSize: 'clamp(3rem, 5.5vw, 5.5rem)',
           fontWeight: 800,
           lineHeight: 1.0,
@@ -77,18 +79,20 @@ export default function Hero() {
             marginBottom: '0.05em',
           }}>{config.hero.headlineAccent}</span><br />
           {config.hero.headlineLine3}
-        </motion.h1>
+        </h1>
 
-        <motion.p {...fade(0.3)} style={{
+        <p style={{
+          ...fadeUp(0.3).style,
           fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300,
           lineHeight: 1.95, color: 'rgba(26,24,23,0.65)',
           maxWidth: 360, marginBottom: '3.5rem',
           position: 'relative', zIndex: 1,
         }}>
           {config.hero.subheadline}
-        </motion.p>
+        </p>
 
-        <motion.div {...fade(0.4)} style={{
+        <div style={{
+          ...fadeUp(0.4).style,
           display: 'flex', gap: '1rem', flexWrap: 'wrap',
           position: 'relative', zIndex: 1,
         }}>
@@ -121,7 +125,7 @@ export default function Hero() {
           >
             Our Services
           </a>
-        </motion.div>
+        </div>
 
       </div>
 
@@ -143,17 +147,16 @@ export default function Hero() {
           background: `linear-gradient(to right, ${config.palette.heroBg}66 0%, transparent 25%)`,
           pointerEvents: 'none',
         }} />
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4, duration: 1 }}
-          style={{
-            position: 'absolute', right: '1.25rem', bottom: '3rem',
-            writingMode: 'vertical-rl', textOrientation: 'mixed',
-            fontFamily: 'Inter, sans-serif', fontSize: '0.62rem', fontWeight: 300,
-            letterSpacing: '0.25em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.45)',
-          }}>
+        <div style={{
+          ...fadeUp(1.4).style,
+          position: 'absolute', right: '1.25rem', bottom: '3rem',
+          writingMode: 'vertical-rl', textOrientation: 'mixed',
+          fontFamily: 'Inter, sans-serif', fontSize: '0.62rem', fontWeight: 300,
+          letterSpacing: '0.25em', textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.45)',
+        }}>
           Est. {city} {config.brand.established}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

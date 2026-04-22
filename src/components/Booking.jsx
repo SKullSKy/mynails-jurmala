@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import DOMPurify from 'dompurify'
 import { z } from 'zod'
 import config from '../data/config.json'
@@ -64,26 +63,20 @@ function SuccessModal({ booking, onClose }) {
   const d = new Date(booking.date)
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 9999,
         background: 'rgba(26,26,26,0.55)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '1.5rem',
+        animation: 'fadeUp 0.3s ease-out forwards',
       }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.98 }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      <div
         onClick={e => e.stopPropagation()}
         style={{
+          animation: 'scaleIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards',
           background: SECTION_BG,
           maxWidth: 480, width: '100%',
           padding: '3rem',
@@ -174,8 +167,8 @@ function SuccessModal({ booking, onClose }) {
         >
           Close
         </button>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -278,9 +271,7 @@ export default function Booking() {
 
   return (
     <>
-      <AnimatePresence>
-        {success && <SuccessModal booking={form} onClose={() => { setSuccess(false); setStep(1); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '' }) }} />}
-      </AnimatePresence>
+      {success && <SuccessModal booking={form} onClose={() => { setSuccess(false); setStep(1); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '' }) }} />}
 
       <section id="book" style={{ padding: '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,26,26,0.07)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '5rem', alignItems: 'start' }}>
@@ -356,12 +347,9 @@ export default function Booking() {
             </div>
 
             <div style={{ padding: '2rem' }}>
-              <AnimatePresence mode="wait">
+              <>
                 {step === 1 ? (
-                  <motion.div key="step1"
-                    initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.3 }}
-                  >
+                  <div key="step1" style={{ animation: 'fadeUp 0.3s ease-out forwards' }}>
                     {/* Service selector */}
                     <div style={{ marginBottom: '1.75rem' }}>
                       <div style={{ ...LABEL, marginBottom: '0.75rem' }}>Select Service</div>
@@ -478,12 +466,9 @@ export default function Booking() {
                     >
                       Continue to Your Details →
                     </button>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <motion.div key="step2"
-                    initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.3 }}
-                  >
+                  <div key="step2" style={{ animation: 'fadeUp 0.3s ease-out forwards' }}>
                     {/* Booking summary bar */}
                     {svc && form.date && form.time && (
                       <div style={{ marginBottom: '1.75rem', padding: '1rem 1.25rem', background: `${ac(0.05)}`, border: `1px solid ${ac(0.15)}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -552,9 +537,9 @@ export default function Booking() {
                         </div>
                       )}
                     </form>
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
+              </>
             </div>
           </div>
         </div>

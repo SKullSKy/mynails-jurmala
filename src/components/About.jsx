@@ -1,11 +1,7 @@
-import { motion } from 'framer-motion'
 import config from '../data/config.json'
 
 const fade = (delay = 0) => ({
-  initial: { opacity: 0, y: 16 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.7, delay, ease: 'easeOut' },
+  style: { opacity: 0, animation: `fadeUp 0.7s ease-out ${delay}s forwards` },
 })
 
 const pillars = [
@@ -41,15 +37,16 @@ export default function About() {
 
         {/* Left — label + heading + image */}
         <div>
-          <motion.div {...fade(0.05)} style={{ marginBottom: '1.75rem' }}>
+          <div {...fade(0.05)} style={{ ...fade(0.05).style, marginBottom: '1.75rem' }}>
             <span style={{
               fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
               letterSpacing: '0.3em', textTransform: 'uppercase',
               color: 'rgba(26,24,23,0.38)',
             }}>The Studio</span>
-          </motion.div>
+          </div>
 
-          <motion.h2 {...fade(0.1)} style={{
+          <h2 style={{
+            ...fade(0.1).style,
             fontFamily: 'Inter, sans-serif',
             fontSize: 'clamp(2.2rem, 4vw, 3.8rem)',
             fontWeight: 800, color: '#1A1817', lineHeight: 1.0,
@@ -59,9 +56,9 @@ export default function About() {
             Craftsmanship rooted<br />
             in{' '}
             <span style={{ borderBottom: `3px solid ${config.brand.accentColor}`, paddingBottom: '2px' }}>{city}.</span>
-          </motion.h2>
+          </h2>
 
-          <motion.div {...fade(0.15)} style={{ position: 'relative', height: '460px', overflow: 'hidden', border: '1px solid rgba(26,24,23,0.08)' }}>
+          <div style={{ ...fade(0.15).style, position: 'relative', height: '460px', overflow: 'hidden', border: '1px solid rgba(26,24,23,0.08)' }}>
             <img
               src={config.images.about}
               alt={`${config.brand.name} — studio`}
@@ -75,38 +72,42 @@ export default function About() {
               onMouseEnter={e => e.target.style.transform = 'scale(1.03)'}
               onMouseLeave={e => e.target.style.transform = 'scale(1)'}
             />
-          </motion.div>
+          </div>
 
-          <motion.p {...fade(0.2)} style={{
+          <p style={{
+            ...fade(0.2).style,
             fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 300,
             color: 'rgba(26,24,23,0.4)', letterSpacing: '0.04em',
             marginTop: '0.75rem',
           }}>
             Serving {city} — available for emergency and scheduled callouts.
-          </motion.p>
+          </p>
         </div>
 
         {/* Right — body text + numbered pillars */}
         <div style={{ paddingTop: '4.5rem' }}>
-          <motion.p {...fade(0.2)} style={{
+          <p style={{
+            ...fade(0.2).style,
             fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300,
             lineHeight: 1.95, color: 'rgba(26,24,23,0.75)', marginBottom: '0.85rem',
           }}>
             {para1}
-          </motion.p>
+          </p>
 
           {para2 && (
-            <motion.p {...fade(0.25)} style={{
+            <p style={{
+              ...fade(0.25).style,
               fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300,
               lineHeight: 1.95, color: 'rgba(26,24,23,0.75)', marginBottom: '3rem',
             }}>
               {para2}
-            </motion.p>
+            </p>
           )}
 
           <div>
             {pillars.map(({ n, title, body }, i) => (
-              <motion.div key={n} {...fade(0.3 + i * 0.08)} style={{
+              <div key={n} style={{
+                ...fade(0.3 + i * 0.08).style,
                 display: 'grid', gridTemplateColumns: '2.5rem 1fr',
                 gap: '1rem', alignItems: 'start',
                 padding: '1.5rem 0',
@@ -126,7 +127,7 @@ export default function About() {
                     color: 'rgba(26,24,23,0.55)', lineHeight: 1.75, fontStyle: 'italic',
                   }}>{body}</div>
                 </div>
-              </motion.div>
+              </div>
             ))}
             <div style={{ borderTop: '1px solid rgba(26,24,23,0.08)' }} />
           </div>
