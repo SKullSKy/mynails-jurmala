@@ -6,10 +6,10 @@ const fade = (delay = 0) => ({
 })
 
 const pillars = [
-  { n: '01', title: 'Punctual response', body: 'Emergency or scheduled — we arrive when we say we will, and work until the job is done.' },
-  { n: '02', title: 'Honest diagnosis', body: 'We identify the root cause before recommending any work. No upselling, no unnecessary replacements.' },
-  { n: '03', title: 'Professional materials', body: 'Industry-grade components exclusively — chosen for longevity and performance, not cost-cutting.' },
-  { n: '04', title: 'Clean finish', body: 'Every site is left as we found it, or better. The work is invisible; the result speaks for itself.' },
+  { n: '01', title: 'Individual approach', body: 'Every sign starts with a conversation — dimensions, finish, mounting. No templates, no shortcuts.' },
+  { n: '02', title: 'Precision fabrication', body: 'Cut to the millimetre from professional-grade acrylic. Every edge clean, every corner exact.' },
+  { n: '03', title: 'Exact colour matching', body: 'RAL and Pantone matching as standard. Your brand colour on the wall — not an approximation.' },
+  { n: '04', title: 'Built to last', body: 'UV-stable materials that hold their colour and structure for years. One investment, permanent presence.' },
 ]
 
 export default function About() {

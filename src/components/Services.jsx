@@ -65,13 +65,12 @@ export default function Services() {
               fontWeight: 800, color: '#1A1817', lineHeight: 1.0,
               letterSpacing: '-0.03em',
             }}>
-              Every call,<br />
-              <span style={{ borderBottom: `3px solid ${config.brand.accentColor}`, paddingBottom: '2px' }}>resolved.</span>
+              Every sign,<br />
+              <span style={{ borderBottom: `3px solid ${config.brand.accentColor}`, paddingBottom: '2px' }}>precisely made.</span>
             </h2>
           </div>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,24,23,0.6)', paddingBottom: isMobile ? 0 : '0.5rem' }}>
-            All works use professional-grade materials. Pricing provided after initial assessment.
-            Available for emergency callouts and scheduled appointments across Latvia.
+            All signage is precision-cut from professional-grade acrylic. Pricing provided after an initial consultation on size, colour, and finish.
           </p>
         </div>
 
