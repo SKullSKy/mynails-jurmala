@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import config from '../data/config.json'
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -7,67 +8,130 @@ const fade = (delay = 0) => ({
   transition: { duration: 0.7, delay, ease: 'easeOut' },
 })
 
+const pillars = [
+  {
+    n: '01',
+    title: 'Punctual response',
+    body: 'Emergency or scheduled — we arrive when we say we will, and work until the job is done.',
+  },
+  {
+    n: '02',
+    title: 'Honest diagnosis',
+    body: 'We identify the root cause before recommending any work. No upselling, no unnecessary replacements.',
+  },
+  {
+    n: '03',
+    title: 'Professional materials',
+    body: 'Industry-grade components exclusively — chosen for longevity and performance, not cost-cutting.',
+  },
+  {
+    n: '04',
+    title: 'Clean finish',
+    body: 'Every site is left as we found it, or better. The work is invisible; the result speaks for itself.',
+  },
+]
+
 export default function About() {
+  const city = config.brand.location.split(' · ')[0]
+  const [para1, para2] = config.philosophy.text.split('\n\n')
+
   return (
-    <section id="about" style={{ padding: '7rem 3rem', background: '#FFF9F7', borderTop: '1px solid rgba(183,110,121,0.1)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
+    <section id="about" style={{ padding: '8rem 3rem', background: config.palette.sectionBg, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '5fr 6fr', gap: '6rem', alignItems: 'start' }}>
 
-        {/* Left — image pair */}
-        <div style={{ position: 'relative' }}>
-          {/* Main image */}
-          <div style={{ height: 420, overflow: 'hidden', border: '1px solid rgba(74,85,104,0.08)', background: '#F5F0EB' }}>
-            <img
-              src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=900&q=85&fm=webp"
-              alt="Nail artistry at work"
-              loading="lazy"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-          {/* Floating accent card */}
-          <motion.div {...fade(0.3)} style={{
-            position: 'absolute', bottom: -28, right: -28,
-            background: '#B76E79', padding: '1.5rem 2rem',
-            boxShadow: '0 8px 32px rgba(183,110,121,0.25)',
+        {/* Left — label + heading + image */}
+        <div>
+          <motion.div {...fade(0.05)} style={{ marginBottom: '1.75rem' }}>
+            <span style={{
+              fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
+              letterSpacing: '0.3em', textTransform: 'uppercase',
+              color: 'rgba(26,24,23,0.38)',
+            }}>The Studio</span>
+          </motion.div>
+
+          <motion.h2 {...fade(0.1)} style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 'clamp(2.2rem, 4vw, 3.8rem)',
+            fontWeight: 800, color: '#1A1817', lineHeight: 1.0,
+            marginBottom: '2.5rem',
+            letterSpacing: '-0.03em',
           }}>
-            <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.2rem', fontWeight: 300, color: '#fff', lineHeight: 1 }}>6+</div>
-            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', marginTop: '0.25rem' }}>
-              years in Jūrmala
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Right — copy */}
-        <div style={{ paddingRight: '1rem' }}>
-          <motion.div {...fade(0.1)} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem' }}>
-            <div style={{ width: 24, height: 1, background: '#B76E79' }} />
-            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#B76E79' }}>The Studio</span>
-          </motion.div>
-
-          <motion.h2 {...fade(0.15)} style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.2rem,4vw,3rem)', fontWeight: 300, color: '#1A1A1A', lineHeight: 1.1, marginBottom: '1.5rem' }}>
-            Artistry rooted<br />
-            <em style={{ fontStyle: 'italic', color: '#B76E79' }}>in Jūrmala.</em>
+            Craftsmanship rooted<br />
+            in{' '}
+            <span style={{ borderBottom: `3px solid ${config.brand.accentColor}`, paddingBottom: '2px' }}>{city}.</span>
           </motion.h2>
 
-          <motion.p {...fade(0.2)} style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.9, color: 'rgba(74,85,104,0.7)', marginBottom: '1.25rem' }}>
-            My Nails Jūrmala was built on a simple conviction: that nail care
-            should feel like an event, not an errand. Every appointment is given
-            its full time — no rushing, no compromise on finish.
+          <motion.div {...fade(0.15)} style={{ position: 'relative', height: '460px', overflow: 'hidden', border: '1px solid rgba(26,24,23,0.08)' }}>
+            <img
+              src={config.images.about}
+              alt={`${config.brand.name} — studio`}
+              loading="lazy"
+              style={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center',
+                display: 'block', transition: 'transform 0.8s ease',
+              }}
+              onMouseEnter={e => e.target.style.transform = 'scale(1.03)'}
+              onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+            />
+          </motion.div>
+
+          <motion.p {...fade(0.2)} style={{
+            fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 300,
+            color: 'rgba(26,24,23,0.4)', letterSpacing: '0.04em',
+            marginTop: '0.75rem',
+          }}>
+            Serving {city} — available for emergency and scheduled callouts.
           </motion.p>
-          <motion.p {...fade(0.25)} style={{ fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300, lineHeight: 1.9, color: 'rgba(74,85,104,0.7)', marginBottom: '2rem' }}>
-            The studio is located minutes from Jomas iela, designed to be calm
-            and unhurried. We use professional-grade products exclusively, and
-            every technique is practiced to a standard we would choose ourselves.
+        </div>
+
+        {/* Right — body text + numbered pillars */}
+        <div style={{ paddingTop: '4.5rem' }}>
+          <motion.p {...fade(0.2)} style={{
+            fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300,
+            lineHeight: 1.95, color: 'rgba(26,24,23,0.75)', marginBottom: '0.85rem',
+          }}>
+            {para1}
           </motion.p>
 
-          <motion.div {...fade(0.3)} style={{ display: 'flex', gap: '2.5rem' }}>
-            {[['500+', 'Clients served'], ['4.9★', 'Google rating'], ['6+', 'Years open']].map(([val, label]) => (
-              <div key={label}>
-                <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.8rem', fontWeight: 300, color: '#1A1A1A', lineHeight: 1 }}>{val}</div>
-                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.78rem', fontWeight: 300, color: 'rgba(74,85,104,0.5)', marginTop: '0.25rem', letterSpacing: '0.06em' }}>{label}</div>
-              </div>
+          {para2 && (
+            <motion.p {...fade(0.25)} style={{
+              fontFamily: 'Inter, sans-serif', fontSize: '1rem', fontWeight: 300,
+              lineHeight: 1.95, color: 'rgba(26,24,23,0.75)', marginBottom: '3rem',
+            }}>
+              {para2}
+            </motion.p>
+          )}
+
+          <div>
+            {pillars.map(({ n, title, body }, i) => (
+              <motion.div key={n} {...fade(0.3 + i * 0.08)} style={{
+                display: 'grid', gridTemplateColumns: '2.5rem 1fr',
+                gap: '1rem', alignItems: 'start',
+                padding: '1.5rem 0',
+                borderTop: '1px solid rgba(26,24,23,0.08)',
+              }}>
+                <div style={{
+                  fontFamily: 'Inter, sans-serif', fontSize: '0.65rem', fontWeight: 400,
+                  color: 'rgba(26,24,23,0.28)', letterSpacing: '0.08em', paddingTop: '0.15rem',
+                }}>{n}</div>
+                <div>
+                  <div style={{
+                    fontFamily: 'Inter, sans-serif', fontSize: '0.92rem', fontWeight: 600,
+                    color: '#1A1817', marginBottom: '0.3rem',
+                  }}>{title}</div>
+                  <div style={{
+                    fontFamily: 'Inter, sans-serif', fontSize: '0.85rem', fontWeight: 300,
+                    color: 'rgba(26,24,23,0.55)', lineHeight: 1.75, fontStyle: 'italic',
+                  }}>{body}</div>
+                </div>
+              </motion.div>
             ))}
-          </motion.div>
+            <div style={{ borderTop: '1px solid rgba(26,24,23,0.08)' }} />
+          </div>
         </div>
+
       </div>
     </section>
   )

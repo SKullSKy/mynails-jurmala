@@ -1,123 +1,145 @@
-import { useEffect, useRef } from 'react'
+import { useState } from 'react'
+import config from '../data/config.json'
 
-// Nail photography — all sourced from Unsplash, .webp format
-const photos = [
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=85&fm=webp', alt: 'Soft pink gel nails close-up', span: 'row' },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80&fm=webp', alt: 'French tip manicure detail', span: '' },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80&fm=webp', alt: 'Rose gold nail art', span: '' },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=800&q=85&fm=webp', alt: 'Nude almond nails', span: 'col' },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80&fm=webp', alt: 'Gel manicure side profile', span: '' },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=600&q=80&fm=webp', alt: 'Ombre nail design', span: '' },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=85&fm=webp', alt: 'Classic red manicure', span: '' },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=800&q=85&fm=webp', alt: 'Nail art detail', span: '' },
-]
+const ACCENT = config.brand.accentColor
+const SECTION_BG = config.palette.sectionBg
 
-// Real varied nail photography sources
-const nailPhotos = [
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=85&fm=webp', alt: 'Elegant pink gel manicure', wide: true, tall: false },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=600&q=85&fm=webp', alt: 'French tip nail art', wide: false, tall: true },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=85&fm=webp', alt: 'Rose gold nail detail', wide: false, tall: false },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=800&q=85&fm=webp', alt: 'Nude almond nails', wide: true, tall: false },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=85&fm=webp', alt: 'Gel manicure profile', wide: false, tall: false },
-  { src: 'https://images.unsplash.com/photo-1604655852743-a5e8e8b8fe13?w=600&q=85&fm=webp', alt: 'Nail art with floral detail', wide: false, tall: true },
-]
+const photos = Array.from(
+  new Map((config.gallery ?? []).map(p => [p.src, p])).values()
+)
 
-function GalleryItem({ photo, index }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const el = ref.current; if (!el) return
-    el.style.opacity = '0'; el.style.transform = 'scale(0.97)'
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          el.style.transition = 'opacity 0.7s ease, transform 0.7s ease'
-          el.style.opacity = '1'; el.style.transform = 'scale(1)'
-        }, index * 80)
-        obs.disconnect()
-      }
-    }, { threshold: 0.1 })
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [index])
-
-  return (
-    <div ref={ref} style={{
-      position: 'relative', overflow: 'hidden',
-      gridColumn: photo.wide ? 'span 2' : 'span 1',
-      gridRow: photo.tall ? 'span 2' : 'span 1',
-      minHeight: photo.tall ? '460px' : '230px',
-      background: '#F5F0EB',
-    }}>
-      <img
-        src={photo.src}
-        alt={photo.alt}
-        loading="lazy"
-        style={{
-          width: '100%', height: '100%', objectFit: 'cover',
-          transition: 'transform 0.6s ease',
-          display: 'block',
-        }}
-        onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}
-        onMouseLeave={e => e.target.style.transform = 'scale(1)'}
-      />
-      {/* Rose tint hover overlay */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'rgba(183,110,121,0)',
-        transition: 'background 0.4s ease',
-        pointerEvents: 'none',
-      }}
-        onMouseEnter={e => e.currentTarget.style.background = 'rgba(183,110,121,0.08)'}
-        onMouseLeave={e => e.currentTarget.style.background = 'rgba(183,110,121,0)'}
-      />
-      {/* Corner bracket — bottom right */}
-      <div style={{
-        position: 'absolute', bottom: 10, right: 10, width: 14, height: 14,
-        borderBottom: '1px solid rgba(183,110,121,0.4)',
-        borderRight: '1px solid rgba(183,110,121,0.4)',
-        pointerEvents: 'none',
-      }} />
-    </div>
-  )
-}
+const CARDS_VISIBLE = 3
 
 export default function Gallery() {
+  const [offset, setOffset] = useState(0)
+
+  if (photos.length === 0) return null
+
+  const maxOffset = Math.max(0, photos.length - CARDS_VISIBLE)
+  const visible = photos.slice(offset, offset + CARDS_VISIBLE)
+
+  const prev = () => setOffset(o => Math.max(0, o - 1))
+  const next = () => setOffset(o => Math.min(maxOffset, o + 1))
+
   return (
-    <section id="gallery" style={{ padding: '7rem 3rem', background: '#F5F0EB' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <section id="gallery" style={{ padding: '8rem 0', background: SECTION_BG, borderTop: '1px solid rgba(26,24,23,0.07)' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 3rem' }}>
+
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '0.75rem' }}>
-              <div style={{ width: 24, height: 1, background: '#B76E79' }} />
-              <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#B76E79' }}>Gallery</span>
-            </div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.2rem,4vw,3rem)', fontWeight: 300, color: '#1A1A1A', lineHeight: 1.1 }}>
-              Work that<br />
-              <em style={{ fontStyle: 'italic', color: '#B76E79' }}>speaks.</em>
-            </h2>
-          </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300, lineHeight: 1.8, color: 'rgba(74,85,104,0.6)', maxWidth: 320 }}>
-            Every set photographed in natural Jūrmala light. No filters — just the work.
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <div style={{
+            fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 500,
+            letterSpacing: '0.3em', textTransform: 'uppercase',
+            color: 'rgba(26,24,23,0.38)', marginBottom: '1rem',
+          }}>Gallery</div>
+          <h2 style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 'clamp(2rem, 3.5vw, 3rem)',
+            fontWeight: 800, color: '#1A1817', lineHeight: 1.05,
+            letterSpacing: '-0.03em', marginBottom: '1rem',
+          }}>
+            Work that speaks for itself.
+          </h2>
+          <p style={{
+            fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300,
+            color: 'rgba(26,24,23,0.5)', maxWidth: 520, margin: '0 auto',
+            lineHeight: 1.75,
+          }}>
+            {config.gallery_caption || 'A selection of our work — crafted with precision and care.'}
           </p>
         </div>
 
-        {/* Asymmetric mosaic */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '3px',
-        }}>
-          {nailPhotos.map((photo, i) => (
-            <GalleryItem key={i} photo={photo} index={i} />
+        {/* Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(photos.length, CARDS_VISIBLE)}, 1fr)`, gap: '1.5rem' }}>
+          {visible.map((photo, i) => (
+            <div key={photo.src} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Image with overlay label */}
+              <div style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden' }}>
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  style={{
+                    width: '100%', height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: photo.objectPosition || 'center',
+                    display: 'block',
+                    transition: 'transform 0.6s ease',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
+                {/* Top-left label overlay */}
+                {photo.label && (
+                  <div style={{
+                    position: 'absolute', top: '1rem', left: '1rem',
+                    background: 'rgba(26,24,23,0.62)',
+                    backdropFilter: 'blur(4px)',
+                    padding: '0.35rem 0.75rem',
+                    fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 500,
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                    color: '#fff',
+                  }}>
+                    {photo.label}
+                  </div>
+                )}
+              </div>
+
+              {/* Caption below card */}
+              <div>
+                <div style={{
+                  fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', fontWeight: 600,
+                  color: '#1A1817', marginBottom: '0.2rem',
+                }}>
+                  {photo.alt}
+                </div>
+                {photo.subtitle && (
+                  <div style={{
+                    fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: 300,
+                    color: 'rgba(26,24,23,0.45)', fontStyle: 'italic',
+                  }}>
+                    {photo.subtitle}
+                  </div>
+                )}
+              </div>
+            </div>
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.85rem', fontWeight: 300, color: 'rgba(74,85,104,0.45)', letterSpacing: '0.06em' }}>
-            Follow us on Instagram for daily updates — <span style={{ color: '#B76E79' }}>@mynailsjurmala</span>
-          </p>
-        </div>
+        {/* Navigation arrows — only when there are more photos than cards visible */}
+        {photos.length > CARDS_VISIBLE && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '3rem' }}>
+            <span style={{
+              fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300,
+              color: 'rgba(26,24,23,0.35)', letterSpacing: '0.1em',
+            }}>
+              {offset + 1} – {Math.min(offset + CARDS_VISIBLE, photos.length)} / {photos.length}
+            </span>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {[[-1, '←'], [1, '→']].map(([dir, label]) => (
+                <button
+                  key={dir}
+                  onClick={dir === -1 ? prev : next}
+                  disabled={(dir === -1 && offset === 0) || (dir === 1 && offset >= maxOffset)}
+                  style={{
+                    width: 44, height: 44,
+                    background: 'transparent',
+                    border: '1px solid rgba(26,24,23,0.2)',
+                    cursor: 'pointer',
+                    fontFamily: 'Inter, sans-serif', fontSize: '1rem',
+                    color: '#1A1817',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.25s ease',
+                    opacity: ((dir === -1 && offset === 0) || (dir === 1 && offset >= maxOffset)) ? 0.25 : 1,
+                  }}
+                  onMouseEnter={e => { if (!e.currentTarget.disabled) { e.currentTarget.style.background = '#1A1817'; e.currentTarget.style.color = '#fff' } }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#1A1817' }}
+                >{label}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   )

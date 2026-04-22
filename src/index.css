@@ -1,23 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --cream:       #FAFAF8;
-  --blush:       #F5F0EB;
-  --rose:        #B76E79;
-  --rose-dark:   #9E5A64;
-  --rose-light:  rgba(183,110,121,0.1);
-  --slate:       #4A5568;
-  --slate-light: rgba(74,85,104,0.45);
-  --ink:         #1A1A1A;
-  --border:      rgba(74,85,104,0.12);
-  --border-rose: rgba(183,110,121,0.25);
+  --bone:          #F2F0EB;
+  --bone-dark:     #EDE9E4;
+  --bronze:        #C5A059;
+  --bronze-dark:   #A8883E;
+  --bronze-light:  rgba(197,160,89,0.1);
+  --ink:           #1A1817;
+  --border:        rgba(26,24,23,0.1);
+  --border-bronze: rgba(197,160,89,0.25);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--cream);
+  background: var(--bone);
   color: var(--ink);
   font-family: 'Inter', sans-serif;
   font-weight: 300;
@@ -28,15 +26,15 @@ body {
 #root { width: 100%; min-height: 100vh; }
 
 h1, h2, h3, h4 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
 }
 
-::selection { background: var(--rose); color: #fff; }
+::selection { background: var(--bronze); color: #fff; }
 
 ::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--cream); }
-::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 2px; }
+::-webkit-scrollbar-track { background: var(--bone); }
+::-webkit-scrollbar-thumb { background: var(--bronze); border-radius: 2px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }

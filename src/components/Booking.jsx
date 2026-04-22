@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DOMPurify from 'dompurify'
 import { z } from 'zod'
+import config from '../data/config.json'
+
+const ACCENT = config.brand.accentColor
+const SECTION_BG = config.palette.sectionBg
+const _rgb = (hex) => { const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(3,5),16); const b = parseInt(hex.slice(5,7),16); return `${r},${g},${b}` }
+const ACCENT_RGB = _rgb(ACCENT)
+const ac = (o) => `rgba(${ACCENT_RGB},${o})`
 
 // ── BOOKLA CONFIGURATION ──────────────────────────────────────────────────────
 // Set VITE_BOOKLA_COMPANY_ID and VITE_BOOKLA_SERVICE_ID in your .env file.
@@ -20,16 +27,7 @@ const bookingSchema = z.object({
   time: z.string().min(1, 'Please select a time'),
 })
 
-const services = [
-  { id: 'classic-mani', label: 'Classic Manicure', duration: '45 min', price: '€25' },
-  { id: 'gel-mani', label: 'Gel Manicure', duration: '60 min', price: '€35' },
-  { id: 'nail-art', label: 'Nail Art Design', duration: '90 min', price: 'From €55' },
-  { id: 'french', label: 'French Tip', duration: '75 min', price: '€42' },
-  { id: 'ombre', label: 'Ombre & Gradient', duration: '90 min', price: '€48' },
-  { id: 'classic-pedi', label: 'Classic Pedicure', duration: '55 min', price: '€32' },
-  { id: 'spa-pedi', label: 'Spa Pedicure', duration: '75 min', price: '€48' },
-  { id: 'gel-extensions', label: 'Gel Extensions', duration: '100 min', price: '€58' },
-]
+const services = config.services.map(s => ({ id: s.id, label: s.name, duration: s.duration, price: s.price }))
 
 const timeSlots = [
   '09:00', '09:45', '10:30', '11:15',
@@ -86,7 +84,7 @@ function SuccessModal({ booking, onClose }) {
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#FAFAF8',
+          background: SECTION_BG,
           maxWidth: 480, width: '100%',
           padding: '3rem',
           position: 'relative',
@@ -102,15 +100,15 @@ function SuccessModal({ booking, onClose }) {
           transition: 'color 0.2s',
           padding: '4px',
         }}
-          onMouseEnter={e => e.currentTarget.style.color = '#B76E79'}
+          onMouseEnter={e => e.currentTarget.style.color = ACCENT}
           onMouseLeave={e => e.currentTarget.style.color = 'rgba(74,85,104,0.5)'}
         >✕</button>
 
         {/* Rose petal icon */}
         <div style={{
           width: 52, height: 52, borderRadius: '50%',
-          background: 'rgba(183,110,121,0.1)',
-          border: '1px solid rgba(183,110,121,0.2)',
+          background: ac(0.1),
+          border: `1px solid ${ac(0.2)}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginBottom: '1.75rem',
           fontSize: '1.4rem',
@@ -131,7 +129,7 @@ function SuccessModal({ booking, onClose }) {
         </p>
 
         {/* Booking summary */}
-        <div style={{ border: '1px solid rgba(183,110,121,0.15)', background: '#FDF8F6' }}>
+        <div style={{ border: `1px solid ${ac(0.15)}`, background: '#EDE9E4' }}>
           {[
             { label: 'Client', value: booking.name },
             { label: 'Service', value: svc?.label },
@@ -143,7 +141,7 @@ function SuccessModal({ booking, onClose }) {
             <div key={label} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               padding: '0.75rem 1.25rem',
-              borderBottom: '1px solid rgba(183,110,121,0.08)',
+              borderBottom: `1px solid ${ac(0.08)}`,
             }}>
               <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300, color: 'rgba(74,85,104,0.5)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 {label}
@@ -155,10 +153,10 @@ function SuccessModal({ booking, onClose }) {
           ))}
         </div>
 
-        <div style={{ marginTop: '1.5rem', padding: '0.9rem 1.25rem', background: 'rgba(183,110,121,0.06)', border: '1px solid rgba(183,110,121,0.12)' }}>
+        <div style={{ marginTop: '1.5rem', padding: '0.9rem 1.25rem', background: `${ac(0.06)}`, border: `1px solid ${ac(0.12)}` }}>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300, color: 'rgba(74,85,104,0.65)', lineHeight: 1.7 }}>
             Please arrive 5 minutes before your appointment. Cancellations require 24 hours' notice.
-            We are located on <strong style={{ fontWeight: 400, color: '#1A1A1A' }}>Jomas iela, Jūrmala</strong>.
+            We are located on <strong style={{ fontWeight: 400, color: '#1A1A1A' }}>{config.contact.address}</strong>.
           </p>
         </div>
 
@@ -166,13 +164,13 @@ function SuccessModal({ booking, onClose }) {
           display: 'block', width: '100%', marginTop: '1.5rem',
           fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 400,
           letterSpacing: '0.1em', textTransform: 'uppercase',
-          color: '#fff', background: '#B76E79', border: 'none',
+          color: '#fff', background: ACCENT, border: 'none',
           padding: '0.9rem', cursor: 'pointer',
           transition: 'background 0.3s ease',
-          boxShadow: '0 4px 16px rgba(183,110,121,0.3)',
+          boxShadow: `0 4px 16px ${ac(0.3)}`,
         }}
-          onMouseEnter={e => e.currentTarget.style.background = '#9E5A64'}
-          onMouseLeave={e => e.currentTarget.style.background = '#B76E79'}
+          onMouseEnter={e => e.currentTarget.style.background = '#A8883E'}
+          onMouseLeave={e => e.currentTarget.style.background = ACCENT}
         >
           Close
         </button>
@@ -261,7 +259,7 @@ export default function Booking() {
   const svc = services.find(s => s.id === form.service)
 
   const INPUT = {
-    width: '100%', background: '#FAFAF8',
+    width: '100%', background: SECTION_BG,
     border: '1px solid rgba(74,85,104,0.15)',
     padding: '0.8rem 1rem',
     fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300,
@@ -269,7 +267,7 @@ export default function Booking() {
     transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
     appearance: 'none',
   }
-  const onFocus = e => { e.target.style.borderColor = '#B76E79'; e.target.style.boxShadow = '0 0 0 3px rgba(183,110,121,0.08)' }
+  const onFocus = e => { e.target.style.borderColor = ACCENT; e.target.style.boxShadow = `0 0 0 3px ${ac(0.08)}` }
   const onBlur  = e => { e.target.style.borderColor = 'rgba(74,85,104,0.15)'; e.target.style.boxShadow = 'none' }
 
   const LABEL = {
@@ -284,67 +282,67 @@ export default function Booking() {
         {success && <SuccessModal booking={form} onClose={() => { setSuccess(false); setStep(1); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '' }) }} />}
       </AnimatePresence>
 
-      <section id="book" style={{ padding: '7rem 3rem', background: '#1A1A1A', borderTop: 'none' }}>
+      <section id="book" style={{ padding: '7rem 3rem', background: SECTION_BG, borderTop: '1px solid rgba(26,26,26,0.07)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '5rem', alignItems: 'start' }}>
 
           {/* Left — copy */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem' }}>
-              <div style={{ width: 24, height: 1, background: '#B76E79' }} />
-              <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C8909A' }}>Reservations</span>
+              <div style={{ width: 24, height: 1, background: ACCENT }} />
+              <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, letterSpacing: '0.22em', textTransform: 'uppercase', color: ACCENT }}>Reservations</span>
             </div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.2rem,4vw,3rem)', fontWeight: 300, color: '#F9F6EE', lineHeight: 1.1, marginBottom: '1.25rem' }}>
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.2rem,4vw,3rem)', fontWeight: 300, color: '#1A1A1A', lineHeight: 1.1, marginBottom: '1.25rem' }}>
               Reserve your<br />
-              <em style={{ fontStyle: 'italic', color: '#C8909A' }}>moment.</em>
+              <em style={{ fontStyle: 'italic', color: ACCENT }}>moment.</em>
             </h2>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300, lineHeight: 1.85, color: 'rgba(249,246,238,0.6)', marginBottom: '2.5rem' }}>
+            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '1.05rem', fontWeight: 300, lineHeight: 1.85, color: '#1A1A1A', marginBottom: '2.5rem' }}>
               Select your service, choose a date and time that suits you,
               then confirm your details. A confirmation will arrive in your inbox.
             </p>
 
             {/* Studio info */}
             {[
-              { label: 'Location', value: 'Jomas iela, Jūrmala' },
+              { label: 'Location', value: config.contact.address },
               { label: 'Hours', value: 'Mon – Sat  09:00 – 19:00\nSun  10:00 – 16:00' },
               { label: 'Cancellation', value: '24 hours notice required' },
             ].map(item => (
-              <div key={item.label} style={{ marginBottom: '1.5rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(200,144,154,0.35)' }}>
-                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 500, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(249,246,238,0.35)', marginBottom: '0.25rem' }}>{item.label}</div>
-                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300, color: 'rgba(249,246,238,0.7)', lineHeight: 1.7, whiteSpace: 'pre-line' }}>{item.value}</div>
+              <div key={item.label} style={{ marginBottom: '1.5rem', paddingLeft: '1rem', borderLeft: `2px solid ${ac(0.35)}` }}>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 500, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#1A1A1A', marginBottom: '0.25rem' }}>{item.label}</div>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', fontWeight: 300, color: '#1A1A1A', lineHeight: 1.7, whiteSpace: 'pre-line' }}>{item.value}</div>
               </div>
             ))}
 
             {/* Bookla future note */}
-            <div style={{ marginTop: '2rem', padding: '1rem 1.25rem', background: 'rgba(200,144,154,0.08)', border: '1px solid rgba(200,144,154,0.2)' }}>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, color: '#C8909A', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            <div style={{ marginTop: '2rem', padding: '1rem 1.25rem', background: `${ac(0.08)}`, border: `1px solid ${ac(0.2)}` }}>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', fontWeight: 400, color: ACCENT, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
                 {/* ── BOOKLA: replace this note once live ── */}
                 Coming soon — instant booking
               </div>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300, color: 'rgba(249,246,238,0.45)', lineHeight: 1.6 }}>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300, color: '#1A1A1A', lineHeight: 1.6 }}>
                 Real-time availability via Bookla will be activated shortly. Until then, all requests are confirmed personally within 2 hours.
               </div>
             </div>
           </div>
 
           {/* Right — booking widget */}
-          <div style={{ border: '1px solid rgba(74,85,104,0.1)', background: '#FFFFFF', boxShadow: '0 8px 48px rgba(26,26,26,0.06)' }}>
+          <div style={{ border: '1px solid rgba(74,85,104,0.1)', background: SECTION_BG, boxShadow: '0 8px 48px rgba(26,26,26,0.06)' }}>
 
             {/* Step indicator */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(74,85,104,0.08)' }}>
               {['Choose Service & Time', 'Your Details'].map((label, i) => (
                 <div key={i} style={{
                   flex: 1, padding: '1rem 1.5rem',
-                  borderBottom: step === i + 1 ? '2px solid #B76E79' : '2px solid transparent',
+                  borderBottom: step === i + 1 ? `2px solid ${ACCENT}` : '2px solid transparent',
                   transition: 'border-color 0.3s ease',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <div style={{
                       width: 20, height: 20, borderRadius: '50%',
-                      background: step > i ? '#B76E79' : step === i + 1 ? 'rgba(183,110,121,0.15)' : 'transparent',
-                      border: `1px solid ${step >= i + 1 ? '#B76E79' : 'rgba(74,85,104,0.2)'}`,
+                      background: step > i ? ACCENT : step === i + 1 ? `${ac(0.15)}` : 'transparent',
+                      border: `1px solid ${step >= i + 1 ? ACCENT : 'rgba(74,85,104,0.2)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontFamily: 'Inter, sans-serif', fontSize: '0.6rem', fontWeight: 500,
-                      color: step > i ? '#fff' : step === i + 1 ? '#B76E79' : 'rgba(74,85,104,0.4)',
+                      color: step > i ? '#fff' : step === i + 1 ? ACCENT : 'rgba(74,85,104,0.4)',
                       transition: 'all 0.3s ease', flexShrink: 0,
                     }}>
                       {step > i ? '✓' : i + 1}
@@ -377,15 +375,15 @@ export default function Booking() {
                             data-bookla-company={BOOKLA_COMPANY_ID || undefined}
                             style={{
                               padding: '0.75rem 0.9rem', textAlign: 'left',
-                              border: `1px solid ${form.service === s.id ? '#B76E79' : 'rgba(74,85,104,0.12)'}`,
-                              background: form.service === s.id ? 'rgba(183,110,121,0.06)' : '#FAFAF8',
+                              border: `1px solid ${form.service === s.id ? ACCENT : 'rgba(74,85,104,0.12)'}`,
+                              background: form.service === s.id ? `${ac(0.06)}` : SECTION_BG,
                               cursor: 'pointer', transition: 'all 0.25s ease',
                             }}
-                            onMouseEnter={e => { if (form.service !== s.id) e.currentTarget.style.borderColor = 'rgba(183,110,121,0.35)' }}
+                            onMouseEnter={e => { if (form.service !== s.id) e.currentTarget.style.borderColor = ac(0.35) }}
                             onMouseLeave={e => { if (form.service !== s.id) e.currentTarget.style.borderColor = 'rgba(74,85,104,0.12)' }}
                           >
                             <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.95rem', fontWeight: 400, color: '#1A1A1A', lineHeight: 1.2 }}>{s.label}</div>
-                            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300, color: '#B76E79', marginTop: '0.2rem' }}>{s.price} · {s.duration}</div>
+                            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 300, color: ACCENT, marginTop: '0.2rem' }}>{s.price} · {s.duration}</div>
                           </button>
                         ))}
                       </div>
@@ -404,14 +402,14 @@ export default function Booking() {
                             <button key={i} onClick={() => selectDate(d)} style={{
                               flexShrink: 0, width: 52, padding: '0.65rem 0',
                               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem',
-                              border: `1px solid ${active ? '#B76E79' : 'rgba(74,85,104,0.12)'}`,
-                              background: active ? '#B76E79' : '#FAFAF8',
+                              border: `1px solid ${active ? ACCENT : 'rgba(74,85,104,0.12)'}`,
+                              background: active ? ACCENT : SECTION_BG,
                               cursor: 'pointer', transition: 'all 0.25s ease',
                             }}
-                              onMouseEnter={e => { if (!active) e.currentTarget.style.borderColor = 'rgba(183,110,121,0.4)' }}
+                              onMouseEnter={e => { if (!active) e.currentTarget.style.borderColor = ac(0.4) }}
                               onMouseLeave={e => { if (!active) e.currentTarget.style.borderColor = 'rgba(74,85,104,0.12)' }}
                             >
-                              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 300, color: active ? 'rgba(255,255,255,0.7)' : isSun ? '#B76E79' : 'rgba(74,85,104,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 300, color: active ? 'rgba(255,255,255,0.7)' : isSun ? ACCENT : 'rgba(74,85,104,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                                 {DAY_NAMES[d.getDay()]}
                               </div>
                               <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.15rem', fontWeight: 400, color: active ? '#fff' : '#1A1A1A', lineHeight: 1 }}>
@@ -442,15 +440,15 @@ export default function Booking() {
                             return (
                               <button key={t} onClick={() => selectTime(t)} disabled={blocked} style={{
                                 padding: '0.6rem 0',
-                                border: `1px solid ${active ? '#B76E79' : blocked ? 'rgba(74,85,104,0.06)' : 'rgba(74,85,104,0.12)'}`,
-                                background: active ? '#B76E79' : blocked ? '#F5F0EB' : '#FAFAF8',
+                                border: `1px solid ${active ? ACCENT : blocked ? 'rgba(74,85,104,0.06)' : 'rgba(74,85,104,0.12)'}`,
+                                background: active ? ACCENT : blocked ? '#EDE9E4' : SECTION_BG,
                                 cursor: blocked ? 'not-allowed' : 'pointer',
                                 fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300,
                                 color: active ? '#fff' : blocked ? 'rgba(74,85,104,0.3)' : '#1A1A1A',
                                 transition: 'all 0.25s ease',
                                 position: 'relative',
                               }}
-                                onMouseEnter={e => { if (!blocked && !active) e.currentTarget.style.borderColor = 'rgba(183,110,121,0.4)' }}
+                                onMouseEnter={e => { if (!blocked && !active) e.currentTarget.style.borderColor = ac(0.4) }}
                                 onMouseLeave={e => { if (!blocked && !active) e.currentTarget.style.borderColor = 'rgba(74,85,104,0.12)' }}
                               >
                                 {t}
@@ -470,13 +468,13 @@ export default function Booking() {
                     <button onClick={advance} style={{
                       width: '100%', fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 400,
                       letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: '#fff', background: '#B76E79', border: 'none',
+                      color: '#fff', background: ACCENT, border: 'none',
                       padding: '0.95rem', cursor: 'pointer',
                       transition: 'all 0.3s ease',
-                      boxShadow: '0 4px 16px rgba(183,110,121,0.25)',
+                      boxShadow: `0 4px 16px ${ac(0.25)}`,
                     }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#9E5A64'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(183,110,121,0.4)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = '#B76E79'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(183,110,121,0.25)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#A8883E'; e.currentTarget.style.boxShadow = `0 6px 24px ${ac(0.4)}` }}
+                      onMouseLeave={e => { e.currentTarget.style.background = ACCENT; e.currentTarget.style.boxShadow = `0 4px 16px ${ac(0.25)}` }}
                     >
                       Continue to Your Details →
                     </button>
@@ -488,7 +486,7 @@ export default function Booking() {
                   >
                     {/* Booking summary bar */}
                     {svc && form.date && form.time && (
-                      <div style={{ marginBottom: '1.75rem', padding: '1rem 1.25rem', background: 'rgba(183,110,121,0.05)', border: '1px solid rgba(183,110,121,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <div style={{ marginBottom: '1.75rem', padding: '1rem 1.25rem', background: `${ac(0.05)}`, border: `1px solid ${ac(0.15)}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                         <div>
                           <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem', fontWeight: 400, color: '#1A1A1A' }}>{svc.label}</div>
                           <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 300, color: 'rgba(74,85,104,0.6)' }}>
@@ -496,7 +494,7 @@ export default function Booking() {
                             {' '}at {form.time} · {svc.duration}
                           </div>
                         </div>
-                        <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', fontWeight: 400, color: '#B76E79' }}>{svc.price}</div>
+                        <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', fontWeight: 400, color: ACCENT }}>{svc.price}</div>
                       </div>
                     )}
 
@@ -529,7 +527,7 @@ export default function Booking() {
                           border: '1px solid rgba(74,85,104,0.15)', padding: '0.9rem 1.2rem',
                           cursor: 'pointer', transition: 'all 0.3s ease',
                         }}
-                          onMouseEnter={e => { e.currentTarget.style.borderColor = '#B76E79'; e.currentTarget.style.color = '#B76E79' }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT }}
                           onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(74,85,104,0.15)'; e.currentTarget.style.color = 'rgba(74,85,104,0.55)' }}
                         >← Back</button>
 
@@ -537,13 +535,13 @@ export default function Booking() {
                           flex: 1,
                           fontFamily: 'Inter, sans-serif', fontSize: '0.82rem', fontWeight: 400,
                           letterSpacing: '0.1em', textTransform: 'uppercase',
-                          color: '#fff', background: submitting ? '#c9909a' : '#B76E79', border: 'none',
+                          color: '#fff', background: submitting ? '#c9909a' : ACCENT, border: 'none',
                           padding: '0.95rem', cursor: submitting ? 'not-allowed' : 'pointer',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 4px 16px rgba(183,110,121,0.25)',
+                          boxShadow: `0 4px 16px ${ac(0.25)}`,
                         }}
-                          onMouseEnter={e => { if (!submitting) { e.currentTarget.style.background = '#9E5A64'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(183,110,121,0.4)' } }}
-                          onMouseLeave={e => { if (!submitting) { e.currentTarget.style.background = '#B76E79'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(183,110,121,0.25)' } }}
+                          onMouseEnter={e => { if (!submitting) { e.currentTarget.style.background = '#A8883E'; e.currentTarget.style.boxShadow = `0 6px 24px ${ac(0.4)}` } }}
+                          onMouseLeave={e => { if (!submitting) { e.currentTarget.style.background = ACCENT; e.currentTarget.style.boxShadow = `0 4px 16px ${ac(0.25)}` } }}
                         >
                           {submitting ? 'Sending…' : 'Confirm Appointment'}
                         </button>

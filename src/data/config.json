@@ -1,0 +1,59 @@
+{
+  "brand": {
+    "name": "3D Art",
+    "shortName": "3D Art",
+    "tagline": "Your logo, elevated to the third dimension.",
+    "location": "Balvi · Latvia",
+    "address": "Balvi, Latvia",
+    "established": "",
+    "accentColor": "#1C1C1E",
+    "vibe": "Architectural Precision",
+    "phone": "+371 26032171"
+  },
+  "palette": {
+    "dark": "#1A1817",
+    "heroBg": "#F5F3EF",
+    "sectionBg": "#F2F0EC"
+  },
+  "images": {
+    "hero": "/pictures/hero.jpg",
+    "about": "/pictures/about.jpg"
+  },
+  "gallery_caption": "Each installation photographed on-site. No filters — just the craft.",
+  "gallery": [
+    { "src": "/pictures/hero.jpg",    "alt": "Luxora Beauty Salon — 3D wall logo installation", "objectPosition": "center" },
+    { "src": "/pictures/about.jpg",   "alt": "Kairos Media — precision 3D lettering",           "objectPosition": "center" },
+    { "src": "/pictures/gallery-3.jpg", "alt": "Earthsense — navy 3D logo, office interior",    "objectPosition": "center" },
+    { "src": "/pictures/gallery-4.jpg", "alt": "Precision letter detail — acrylic cut",         "objectPosition": "center top" }
+  ],
+  "hero": {
+    "headlineLine1": "From concept",
+    "headlineAccent": "to wall.",
+    "headlineLine3": "Precisely.",
+    "subheadline": "Premium 3D wall signage, precision-cut from acrylic. Built for businesses that understand the power of physical presence.",
+    "ctaText": "Request a Quote"
+  },
+  "philosophy": {
+    "title": "The Art of Physical Presence",
+    "text": "3D Art creates premium wall signage for businesses that know their brand deserves more than a screen. Each sign is precision-cut from professional-grade acrylic, shaped with depth and dimension that commands attention from the first second.\n\nWe work with salons, studios, offices, and emerging brands across Latvia. Every piece is crafted to your exact colours and dimensions — fully customisable, individually approached, built to last."
+  },
+  "services": [
+    { "id": "standard-logo",   "name": "Standard 3D Logo",          "description": "Precision-cut acrylic sign up to 60 cm — ideal for salons and studios",  "price": "On request", "duration": "" },
+    { "id": "medium-logo",     "name": "Medium 3D Logo",             "description": "Bold wall presence from 60–120 cm — offices and coworking spaces",        "price": "On request", "duration": "" },
+    { "id": "large-logo",      "name": "Large Format Sign",          "description": "Statement installations over 120 cm — reception halls and retail",         "price": "On request", "duration": "" },
+    { "id": "full-signage",    "name": "Full Signage Package",       "description": "Design, fabrication and professional installation included",                "price": "On request", "duration": "" },
+    { "id": "custom-design",   "name": "Custom Design & Consult",   "description": "From logo refinement to final 3D render — we guide the whole process",     "price": "On request", "duration": "" },
+    { "id": "colour-match",    "name": "Colour Matching",            "description": "Exact RAL or Pantone colour match to your brand guidelines",                "price": "On request", "duration": "" }
+  ],
+  "contact": {
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": "+371 26032171",
+    "phone": "+371 26032171",
+    "address": "Balvi, Latvia"
+  },
+  "seo": {
+    "title": "3D Art — Premium 3D Wall Signage in Latvia",
+    "description": "Precision-cut 3D acrylic wall logos for businesses, salons, and offices across Latvia. Custom colours, individual approach. Call +371 26032171."
+  }
+}

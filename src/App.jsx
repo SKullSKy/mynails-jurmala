@@ -1,24 +1,26 @@
 import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import GrainOverlay from './components/GrainOverlay'
 import './index.css'
 
 const Services = lazy(() => import('./components/Services'))
 const Gallery  = lazy(() => import('./components/Gallery'))
 const About    = lazy(() => import('./components/About'))
-const Booking  = lazy(() => import('./components/Booking'))
+const Contact  = lazy(() => import('./components/Contact'))
 const Footer   = lazy(() => import('./components/Footer'))
 
 export default function App() {
   return (
-    <div style={{ background: '#FAFAF8', minHeight: '100vh' }}>
+    <div style={{ background: '#F2F0EB', minHeight: '100vh' }}>
+      <GrainOverlay />
       <Navbar />
       <Hero />
       <Suspense fallback={null}>
         <Services />
         <Gallery />
         <About />
-        <Booking />
+        <Contact />
         <Footer />
       </Suspense>
     </div>
