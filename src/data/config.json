@@ -21,10 +21,11 @@
   },
   "gallery_caption": "Each installation photographed on-site. No filters — just the craft.",
   "gallery": [
-    { "src": "/pictures/hero.jpg",    "alt": "Luxora Beauty Salon — 3D wall logo installation", "objectPosition": "center" },
-    { "src": "/pictures/about.jpg",   "alt": "Kairos Media — precision 3D lettering",           "objectPosition": "center" },
-    { "src": "/pictures/gallery-3.jpg", "alt": "Earthsense — navy 3D logo, office interior",    "objectPosition": "center" },
-    { "src": "/pictures/gallery-4.jpg", "alt": "Precision letter detail — acrylic cut",         "objectPosition": "center top" }
+    { "src": "/pictures/hero.jpg",      "alt": "Luxora Beauty Salon — gloss black 3D logo on cream wall",  "objectPosition": "center" },
+    { "src": "/pictures/about.jpg",     "alt": "Kairos Media — precision 3D lettering in office interior", "objectPosition": "center" },
+    { "src": "/pictures/gallery-3.jpg", "alt": "Earthsense — navy 3D logo installation",                   "objectPosition": "center" },
+    { "src": "/pictures/gBmSFAI.png",   "alt": "WHITE — cream 3D lettering on dark textured wall",         "objectPosition": "center" },
+    { "src": "/pictures/uEm0y4B.png",   "alt": "IK — white acrylic logo on sage green wall",               "objectPosition": "center" }
   ],
   "hero": {
     "headlineLine1": "From concept",
